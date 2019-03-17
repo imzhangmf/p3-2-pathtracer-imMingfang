@@ -76,7 +76,8 @@ Spectrum MicrofacetBSDF::sample_f(const Vector3D& wo, Vector3D* wi, float* pdf) 
   // Note: You should fill in the sampled direction *wi and the corresponding *pdf,
   //       and return the sampled BRDF value.
 
-  return Spectrum();
+  *wi = cosineHemisphereSampler.get_sample(pdf); //placeholder
+  return MicrofacetBSDF::f(wo, *wi);
 }
 
 // Refraction BSDF //
