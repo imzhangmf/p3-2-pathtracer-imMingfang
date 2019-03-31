@@ -9,48 +9,267 @@
       padding-left: 100px;  
     }  
   </style> 
-<title>Your Name  |  CS 184</title>
+<title>Mingfang Zhang  |  CS 184</title>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <link rel="stylesheet" type="text/css" href="style.css" media="screen" />
 </head>
 <body>
 <br />
 <h1 align="middle">Assignment 3: PathTracer</h1>
-    <h2 align="middle">Your Name</h2>
+<h2 align="middle">Mingfang Zhang</h2>
 
-    <div class="padded">
-        <p>Use this section to write an overview of the assignment. All of the text in your write-up should be <em>in your own words</em>. If you need to add additional HTML features to this document, you can search the <a href="http://www.w3schools.com/">http://www.w3schools.com/</a> website for instructions. To edit the HTML, you can just copy and paste existing chunks and fill in the text and image file names appropriately.</p>
-        <o>The website writeup is intended to be a self-contained walkthrough of the assignment: we want this to be a piece of work which showcases your understanding of relevant concepts through both mesh images as well as written explanations about what you did to complete each part of the assignment. Try to be as clear and organized as possible when writing about your own output files or extensions to the assignment. We want to understand what you've achieved and how you've done it!</p> 
-        <p>If you are well-versed in web development, feel free to ditch this template and make a better looking page. Just make sure that you include all the components as we've laid them out here. </p>
+<div class="padded">
+<p>Add additional features to ray tracer, including more complicated materials, environment lights, and depth of field effects.</p>
 
-    <h2 align="middle">Part 1: Ray Generation and Intersection</h2>
-        <p>Describe what you did in Part 1. etc...</p>
-        <div align="center">
-            <table style="width=100%">
-                <tr>
-                    <td align="middle">
-                    <img src="images/example_image.png" width="480px" />
-                    <figcaption align="middle">Results Caption: my bunny is the bounciest bunny</figcaption>
-                </tr>
-            </table>
-        </div>
-        <p>Here is an example of how to include a simple formula:</p>
-        <p align="middle"><pre align="middle">a^2 + b^2 = c^2</pre></p>
-        <p>or, alternatively, you can include an SVG image of a LaTex formula.</p>
-        <p>This time it's your job to copy-paste in the rest of the sections :)</p>
+<h2 align="middle">Part 1: Ray Generation and Intersection</h2>
 
+<div align="middle">
+  <table style="width=100%">
+    <tr>
+      <td>
+        <img src="images/sp0.png" align="middle" width="100%"/>
+        <figcaption align="middle">-m 0</figcaption>
+      </td>
+      <td>
+        <img src="images/sp1.png" align="middle" width="100%"/>
+        <figcaption align="middle">-m 1</figcaption>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <img src="images/sp2.png" align="middle" width="100%"/>
+        <figcaption align="middle">-m 2</figcaption>
+      </td>
+      <td>
+        <img src="images/sp3.png" align="middle" width="100%"/>
+        <figcaption align="middle">-m 3</figcaption>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <img src="images/sp4.png" align="middle" width="100%"/>
+        <figcaption align="middle">-m 4</figcaption>
+      </td>
+      <td>
+        <img src="images/sp5.png" align="middle" width="100%"/>
+        <figcaption align="middle">-m 5</figcaption>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <img src="images/sp100.png" align="middle" width="100%"/>
+        <figcaption align="middle">-m 100</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
 
+<p>
 
-    <h2 align="middle">A Few Notes On Webpages</h2>
-        <p>Here are a few problems students have encountered in the past. You will probably encounter these problems at some point, so don't wait until right before the deadline to check that everything is working. Test your website on the instructional machines early!</p>
-        <ul>
-        <li>Your main report page should be called index.html.</li>
-        <li>Be sure to include and turn in all of the other files (such as images) that are linked in your report!</li>
-        <li>Use only <em>relative</em> paths to files, such as <pre>"./images/image.jpg"</pre>
-        Do <em>NOT</em> use absolute paths, such as <pre>"/Users/student/Desktop/image.jpg"</pre></li>
-        <li>Pay close attention to your filename extensions. Remember that on UNIX systems (such as the instructional machines), capitalization matters. <pre>.png != .jpeg != .jpg != .JPG</pre>
-        <li>Be sure to adjust the permissions on your files so that they are world readable. For more information on this please see this tutorial: <a href="http://www.grymoire.com/Unix/Permissions.html">http://www.grymoire.com/Unix/Permissions.html</a></li>
-        <li>And again, test your website on the instructional machines early!</li>
+<li>-m 0: only lights</li>
+<li>-m 1: add diffuse items(walls and floor) which light can directly shoot ray on</li>
+<li>-m 2: add ceiling and specular surfaces(surface of mirror ball and part of surface of glass ball), because sprcular effects can be realised with 2 bounces of rays</li>
+<li>-m 3: now ceiling can be reflected in the mirror ball, and we can see refracted lights in the glass ball, because refracting effect can be realised with 3 bounces of rays</li>
+<li>-m 4: the light refracted in the glass ball can now be seen in the mirror ball, and the light refracted by the glass ball can now be seen on the floor, which needs 4 bounces of rays</li>
+<li>-m 5, the bottom of the glass ball is now bright, because the light on the floor is reflected, and we can also see the light on the floor in the mirror ball, and we can see light on the right wall because of the refraction of the glass ball</li>
+<li>-m 100, not much difference from "-m 5", because it has almost converged since then</li>
+
+</p>
+
+<h2 align="middle">Part 2: Microfacet Materials</h2>
+
+<h3>2-1</h3>
+
+<div align="middle">
+  <table style="width=100%">
+    <tr>
+      <td>
+        <img src="images/dra005.png" align="middle" width="100%"/>
+        <figcaption align="middle">aplha = 0.005</figcaption>
+      </td>
+      <td>
+        <img src="images/dra05.png" align="middle" width="100%"/>
+        <figcaption align="middle">alpha = 0.05</figcaption>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <img src="images/dra25.png" align="middle" width="100%"/>
+        <figcaption align="middle">alpha = 0.25</figcaption>
+      </td>
+      <td>
+        <img src="images/dra5.png" align="middle" width="100%"/>
+        <figcaption align="middle">alpha = 0.5</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<p>The surface of the dragon is becoming less reflective as alpha increases. In addition, as alpha grows, the dragon reflect less walls and more lights.</p>
+
+<h3>2-2</h3>
+
+<div align="middle">
+  <table style="width=100%">
+    <tr>
+      <td>
+        <img src="images/hemi.png" align="middle" width="100%"/>
+        <figcaption align="middle">hemisphere sampling</figcaption>
+      </td>
+      <td>
+        <img src="images/imp.png" align="middle" width="100%"/>
+        <figcaption align="middle">importance sampling</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<p>The noise on the body of the bunny using hemisphere sampling is more than using importance sampling, because hemisphere sampling samples at random directions instead of sampling towards the light.</p>
+
+<h3>2-3</h3>
+
+<div align="middle">
+  <table style="width=100%">
+    <tr>
+      <td>
+        <img src="images/tiDragon.png" align="middle" width="100%"/>
+        <figcaption align="middle">Ti Dragon(-s 64 -l 1 -m 5)</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<p>eta: 2.6640 2.5400 2.3075</p>
+<p>k: 3.7080 3.4300 3.0850</p>
+
+<h2 align="middle">Part 3: Environment Light</h2>
+
+<div align="middle">
+  <table style="width=100%">
+    <tr>
+      <td>
+        <img src="images/field.png" align="middle" width="100%"/>
+        <figcaption align="middle">I use field.exr in this part</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<h3>3-1</h3>
+
+<p>To deal with an infinite environment light, we can use uniform sampling in which we probe all directions equally for incident light. We can also use importance sampling, in which we assign each pixel a probability in the environment map based on the total flux passing through the solid angle it represents.</p>
+
+<h3>3-2</h3>
+
+<div align="middle">
+  <table style="width=100%">
+    <tr>
+      <td>
+        <img src="images/pd.png" align="middle" width="100%"/>
+        <figcaption align="middle">probability_debug</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<h3>3-3</h3>
+
+<div align="middle">
+  <table style="width=100%">
+    <tr>
+      <td>
+        <img src="images/hemis.png" align="middle" width="100%"/>
+        <figcaption align="middle">hemisphere sampling</figcaption>
+      </td>
+      <td>
+        <img src="images/imps.png" align="middle" width="100%"/>
+        <figcaption align="middle">importance sampling</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<p>If you look closely, you'll find that hemisphere sampling is noisier than importance sampling.</p>
+
+<h3>3-4</h3>
+
+<div align="middle">
+  <table style="width=100%">
+    <tr>
+      <td>
+        <img src="images/hemis2.png" align="middle" width="100%"/>
+        <figcaption align="middle">hemisphere sampling</figcaption>
+      </td>
+      <td>
+        <img src="images/imps2.png" align="middle" width="100%"/>
+        <figcaption align="middle">importance sampling</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<p>Importance sampling is slightly smoother than hemisphere sampling, especially in the high light part of the bunny.</p>
+
+<h2 align="middle">Part 4: Depth of Field</h2>
+
+<h3>4-1</h3>
+
+<p>Pin-hole camera is a thin-lens camera with a lens' radius 0. In addition, everything is in focus with a pin-hole model, but it's not true in thin-lens model, because every point in the lens refracts rays. And because different points in the lens has different ability to refracts a ray, there exists a plane of focus and only the part of object in that plane can be seen clearly in the image plane.</p>
+
+<h3>4-2</h3>
+
+<div align="middle">
+  <table style="width=100%">
+    <tr>
+      <td>
+        <img src="images/dra0435.png" align="middle" width="100%"/>
+        <figcaption align="middle">-b 0.4 -d 3.5</figcaption>
+      </td>
+      <td>
+        <img src="images/dra0440.png" align="middle" width="100%"/>
+        <figcaption align="middle">-b 0.4 -d 4.0</figcaption>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <img src="images/dra0445.png" align="middle" width="100%"/>
+        <figcaption align="middle">-b 0.4 -d 4.5</figcaption>
+      </td>
+      <td>
+        <img src="images/dra0450.png" align="middle" width="100%"/>
+        <figcaption align="middle">-b 0.4 -d 5.0</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<h3>4-3</h3>
+
+<div align="middle">
+  <table style="width=100%">
+    <tr>
+      <td>
+        <img src="images/dra0145.png" align="middle" width="100%"/>
+        <figcaption align="middle">-b 0.1 -d 4.5</figcaption>
+      </td>
+      <td>
+        <img src="images/dra0245.png" align="middle" width="100%"/>
+        <figcaption align="middle">-b 0.2 -d 4.5</figcaption>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <img src="images/dra0345.png" align="middle" width="100%"/>
+        <figcaption align="middle">-b 0.3 -d 4.5</figcaption>
+      </td>
+      <td>
+        <img src="images/dra0445.png" align="middle" width="100%"/>
+        <figcaption align="middle">-b 0.4 -d 4.5</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
+        
 </div>
 </body>
 </html>
